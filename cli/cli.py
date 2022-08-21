@@ -17,52 +17,48 @@ def run(quote, console):
     init_curses()
     console.keypad(1)
     width = curses.COLS
-    update_console(5, 0, str(width), COLORS.magenta, console)
-
-    update_console(0, 0, quote, COLORS.magenta, console)
+    lines = len(quote) // width
+    left = 0
+    split_text = []
+    for line in range(lines+1):
+        split = quote[left:left+width]
+        update_console(line, 0, split, COLORS.magenta, console)
+        split_text.append(split)
+        left += width
     console.refresh()
+
     words = quote.split(' ')
     word_indices = get_word_indices(quote)
 
-    row = position = word_idx = score = correct = 0
-    input_word = ''
-    lines, cols = divmod(len(quote), width)
+    row = position = count = word_idx = 0
+    user_input = []
     start = time.time()
-    input_word = ''
-    while row != lines-1 or position != cols-1:
+    while count < len(quote):
         if position == width:
             row += 1
-            position = 1
+            position = 0
+        #update_console(row + 7, 0, str(position), COLORS.white, console)
         key = console.getch(row, position)
-#        update_console(1, 0, str(key), COLORS.white, console)
         if key == 27: # esc
             break
-        #elif key == 8 or key == 127 or key == curses.KEY_BACKSPACE: # backspace
-        #    update_console(0, position, quote[position], COLORS.magenta, console)
-        #    if position > 0:
-        #        user_input.pop()
-        #        position -= 1
-        #    continue
+        elif key == 8 or key == 127 or key == curses.KEY_BACKSPACE: # backspace
+            update_console(row, position, split_text[row][position], COLORS.magenta, console)
+            if user_input:
+                user_input.pop()
+            if position > 0:
+                position -= 1
+            elif row > 0:
+                row -= 1
+                position = width - 1
+            count -= 1
+            continue
 
         key = chr(key)
-        if key == ' ':
-            if input_word == words[word_idx]:
-                score += 1
-            word_idx += 1
-            new_position = word_indices[word_idx] % width
-            console.move(row, new_position)
-            console.refresh()
-            position = word_indices[word_idx]
-            input_word = ''
-        else:
-            position = handle_char(key, row, position, quote, console)
-            input_word += key
-    if input_word == words[word_idx]:
-        score += 1
+        position, count = handle_char(key, row, position, split_text[row], count, user_input, console)
 
     end = time.time()
-    update_console(2, 0, str(score), COLORS.white, console) 
-    time.sleep(2)
+    #update_console(10, 0, ''.join(user_input), COLORS.white, console)
+    time.sleep(3)
     duration = end - start
 #    wpm = get_wpm(duration, quote)
 
@@ -71,18 +67,22 @@ def update_console(row, col, text, color, console):
     console.refresh()
 
 
-def handle_char(key, row, position, quote, console):
+def handle_char(key, row, position, quote, count, user_input, console):
     character = quote[position]
     if key == character:
         update_console(row, position, key, COLORS.white, console)
         position += 1
-#    elif character == " ":        
-#        update_console(0, position, key, COLORS.red, console)        
+        count += 1
+        user_input.append(key)
+    elif character == " ":        
+        update_console(row, position, key, COLORS.red, console)        
     else:
         update_console(row, position, character, COLORS.red, console)
         position += 1
+        count += 1
+        user_input.append(key)
 
-    return position
+    return position, count
         
 
 def get_word_indices(text):
