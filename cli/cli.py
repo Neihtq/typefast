@@ -60,10 +60,12 @@ def update_console_and_position(row, position, text, key, color, user_input, con
     return position
 
 
-def handle_char(key, row, position, text, user_input, console):
+def handle_char(key, row, position, text, user_input, console, skip_space):
     character = text[position]
     if key == character:
-        position = update_console_and_position(row, position, key, key, COLORS.white, user_input, console)
+        text = '_' if skip_space else key
+        color = COLORS.red if skip_space else COLORS.white
+        position = update_console_and_position(row, position, text, key, color, user_input, console)
     elif character == " ":        
         update_console(row, position, '_', COLORS.red, console)        
     else:
@@ -109,7 +111,7 @@ def handle_space(row, position, word_idx, word_indices):
 
 
 def game_loop(split_text, word_indices, target_row, target_col, console):
-    row = position = word_idx = 0
+    row = prev_position = position = word_idx = 0
     user_input, width = [], curses.COLS
     while row != target_row or position != target_col:
         row, position = shift_row(row, position, width)
@@ -124,7 +126,11 @@ def game_loop(split_text, word_indices, target_row, target_col, console):
         if key == ' ':
             row, position, word_idx = handle_space(row, position, word_idx, word_indices)
 
-        position = handle_char(key, row, position, split_text[row], user_input, console)
+        skip_space = False
+        if split_text[row][position] == ' ': 
+            skip_space = prev_position == position
+        prev_position = position
+        position = handle_char(key, row, position, split_text[row], user_input, console, skip_space)
 
 
 def get_word_indices(text):
