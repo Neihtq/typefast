@@ -42,14 +42,18 @@ def run(quote, console):
         if key == 27: # esc
             break
         elif key == 8 or key == 127 or key == curses.KEY_BACKSPACE: # backspace
-            update_console(row, position, split_text[row][position], COLORS.magenta, console)
-            if user_input:
-                user_input.pop()
             if position > 0:
+                if split_text[row][position - 1] == ' ':
+                    continue
                 position -= 1
             elif row > 0:
                 row -= 1
                 position = width - 1
+
+            if user_input:
+                user_input.pop()
+
+            update_console(row, position, split_text[row][position], COLORS.magenta, console)
             count -= 1
             continue
 
@@ -58,7 +62,7 @@ def run(quote, console):
 
     end = time.time()
     #update_console(10, 0, ''.join(user_input), COLORS.white, console)
-    time.sleep(3)
+    time.sleep(1)
     duration = end - start
 #    wpm = get_wpm(duration, quote)
 
@@ -70,12 +74,13 @@ def update_console(row, col, text, color, console):
 def handle_char(key, row, position, quote, count, user_input, console):
     character = quote[position]
     if key == character:
-        update_console(row, position, key, COLORS.white, console)
+        if key != ' ':
+         update_console(row, position, key, COLORS.white, console)
         position += 1
         count += 1
         user_input.append(key)
     elif character == " ":        
-        update_console(row, position, key, COLORS.red, console)        
+        update_console(row, position, '_', COLORS.red, console)        
     else:
         update_console(row, position, character, COLORS.red, console)
         position += 1
