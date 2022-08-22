@@ -2,8 +2,11 @@ import time
 import curses
 
 from metrics.metrics import get_wpm
+from utils.constants import FINISHED, RESULT
+from utils.cli_utils import update_console, update_console_and_position
 
 COLORS = None
+
 
 def init_curses():
     curses.curs_set(0)
@@ -11,16 +14,16 @@ def init_curses():
     curses.noecho()
 
 
-def multi_line_text(quote, target_row, width, console):
+def multi_line_text(text, target_row, width, console):
     left, split_text, word_indices = 0, [], []
     for line in range(target_row+1):
         split = ''
         for i in range(left, left + width):
-            if i >= len(quote):
+            if i >= len(text):
                 continue
-            if quote[i] == ' ':
+            if text[i] == ' ':
                 word_indices.append(i % width)
-            split += quote[i]
+            split += text[i]
         update_console(line, 0, split, COLORS.magenta, console)
         split_text.append(split)
         left += width
@@ -29,35 +32,40 @@ def multi_line_text(quote, target_row, width, console):
     return split_text, word_indices, 
 
 
-def run(quote, console):
-    from utils.colors import colors
+def run(text, console, colors, author):
+    console.clear()
+
     global COLORS
-    COLORS = colors
+    COLORS, width = colors, curses.COLS
     init_curses()
     console.keypad(1)
-    width = curses.COLS
 
-    target_row, target_col = divmod(len(quote), width)
-    split_text, word_indices = multi_line_text(quote, target_row, width, console)
-    start = time.time()
-    game_loop(split_text, word_indices, target_row, target_col, console)
+    target_row, target_col = divmod(len(text), width)
+    split_text, word_indices = multi_line_text(text, target_row, width, console)
 
+    author_position = len(split_text[-1]) + 2
+    update_console(target_row, author_position, f'-{author}', COLORS.white, console)
+
+    user_input, start = game_loop(split_text, word_indices, target_row, target_col, console)
     end = time.time()
-    duration = end - start
+
+    if start:
+        duration = end - start
+        target_row = display_result(target_row, duration, user_input, text, console)
+    
+    return target_row + 1
+
+
+
+def display_result(target_row, duration, user_input, text, console):
+    update_console(target_row + 2, 0, FINISHED, COLORS.green, console)
     time.sleep(1)
-#    wpm = get_wpm(duration, quote)
+    wpm = get_wpm(duration, user_input, text)
+    update_console(target_row + 3, 0, RESULT, COLORS.green, console)
+    update_console(target_row + 4, 0, f'{wpm} wpm', COLORS.green, console)
+    time.sleep(2)
 
-def update_console(row, col, text, color, console):
-    console.addstr(row, col, text, color)
-    console.refresh()
-
-
-def update_console_and_position(row, position, text, key, color, user_input, console):
-    update_console(row, position, text, color, console)
-    position += 1
-    user_input.append(key)
-
-    return position
+    return target_row + 4
 
 
 def handle_char(key, row, position, text, user_input, console, skip_space):
@@ -113,11 +121,14 @@ def handle_space(row, position, word_idx, word_indices):
 def game_loop(split_text, word_indices, target_row, target_col, console):
     row = prev_position = position = word_idx = 0
     user_input, width = [], curses.COLS
+    start = None
     while row != target_row or position != target_col:
         row, position = shift_row(row, position, width)
         key = console.getch(row, position)
+        if not start:
+            start = time.time()
         if key == 27: # esc
-            break
+            return None, None
         elif key == 8 or key == 127 or key == curses.KEY_BACKSPACE: # backspace
             row, position = handle_backspace(row, position, width, split_text, user_input, console)
             continue
@@ -132,11 +143,4 @@ def game_loop(split_text, word_indices, target_row, target_col, console):
         prev_position = position
         position = handle_char(key, row, position, split_text[row], user_input, console, skip_space)
 
-
-def get_word_indices(text):
-    indices = [0]
-    for i in range(1, len(text)):
-        if text[i-1] == ' ':
-            indices.append(i)
-    
-    return indices
+    return user_input, start
