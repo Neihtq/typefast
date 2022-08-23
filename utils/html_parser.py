@@ -18,3 +18,10 @@ def get_parsed_html(url):
 
 def get_random_idx(end, start=0):
     return random.randint(start, end)
+
+
+def find_classes(url, tag, class_name, href=None):
+    html = get_parsed_html(url)
+    classes = html.find_all(tag, {'class': class_name}, href=href)
+
+    return classes

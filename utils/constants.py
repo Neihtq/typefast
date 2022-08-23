@@ -17,3 +17,8 @@ RESTART = 'Restart in'
 # Notification
 FINISHED = 'Done. Calculating your words per minuts (wpm) now...'
 RESULT = 'Your Score:'
+
+PRELOAD_BUFFER = 8
+
+# paths
+PRELOAD_TEXT = 'preload.csv'
