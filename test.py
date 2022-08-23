@@ -1,7 +1,10 @@
-from asyncio import exceptions
+import time
+import curses
+
 from tqdm import tqdm
-from utils.constants import TOPICS, TOPIC_CLASS, URL, QUOTE_CLASS, PAGE_LINK_CLASS
 from utils.html_parser import get_parsed_html
+from utils.constants import TOPICS, TOPIC_CLASS, URL, QUOTE_CLASS, PAGE_LINK_CLASS
+
 
 def get_topics_less_2_pages():
     topics_html = get_parsed_html(TOPICS)
@@ -24,5 +27,26 @@ def get_topics_less_2_pages():
     for e in exceptions:
         print(e)
 
+
+def throw_exception():
+    console = curses.initscr()
+    console.clear()
+    console.addstr(0, 0, 'test')
+    console.refresh()
+
+    time.sleep(1)
+
+    try:
+        x = 1 / 0
+    except Exception as e:
+        curses.endwin() 
+        time.sleep(1)
+        print('Ended window')
+        time.sleep(1)
+        raise e
+
+
+
 if __name__ == '__main__':
-    get_topics_less_2_pages()
+    #get_topics_less_2_pages()
+    throw_exception()
