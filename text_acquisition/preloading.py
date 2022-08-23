@@ -13,11 +13,11 @@ def preload():
         csv_reader = csv.reader(csv_file, delimiter=';')
         data = [row for row in csv_reader]
 
-    return data[:-1]
+    return data if data[-1] else data[-1]
 
 
 def update_preload(data):
-    with open(CACHE_PATH, 'w') as csv_file:
+    with open(CACHE_PATH, 'w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for row in data:
             csv_writer.writerow(row)
