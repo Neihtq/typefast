@@ -44,19 +44,20 @@ def run(text, console, colors, author):
     target_row, target_col = divmod(len(text), width)
     split_text, word_indices = multi_line_text(text, target_row, width, console)
 
-    author_position = len(split_text[-1]) + 2
     author_row = target_row + 2
     update_console(author_row, 0, f'-{author}', console, COLORS.white)
 
     user_input, start = game_loop(split_text, word_indices, target_row, target_col, console)
     end = time.time()
 
+    wait_time = 2
     if start:
         duration = end - start
         author_row = display_result(author_row, duration, user_input, text, console)
+        wait_time = 5
     
-    return author_row + 1
-
+    
+    return author_row + 1, wait_time
 
 
 def display_result(target_row, duration, user_input, text, console):
@@ -124,8 +125,9 @@ def game_loop(split_text, word_indices, target_row, target_col, console):
     user_input, width = [], curses.COLS
     start = None
     while row != target_row or position != target_col:
+        curses.flushinp()
         row, position = shift_row(row, position, width)
-        key = console.getch(row, position)
+        key = console.getch()
         if not start:
             start = time.time()
 

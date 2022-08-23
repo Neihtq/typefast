@@ -30,19 +30,25 @@ def menu(row, color, console, greeting):
             update_console(row + offset, 0, INVALID, console, color)
 
 
-def countdown(row, console):
+def countdown(row, console, duration):
     position = len(RESTART) + 1
     update_console(row + 2, 0, RESTART, console)
 
-    key = 0
-    console.timeout(100)
-    for i in range(5, 0, -1):
+    console.nodelay(True)
+    start = time.time()
+    end = time.time()
+    timer = 0
+    while end - start <= duration:
+        end = time.time()
+        if end - start > timer:
+            update_console(row + 2, position, str(duration - timer), console)
+            timer += 1
+
+        key = console.getch()
         if key == 3:
             exit_game()
-        update_console(row + 2, position, str(i), console)
-        time.sleep(1)
-        key = console.getch()
 
+    console.nodelay(False)
 
 def exit_game():
     curses.endwin()
