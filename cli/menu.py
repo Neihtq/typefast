@@ -34,16 +34,14 @@ def countdown(row, console):
     position = len(RESTART) + 1
     update_console(row + 2, 0, RESTART, console)
 
-    console.nodelay(True)
-    key = console.getch()
-    if key == 3:
-        exit_game()
-
+    key = 0
+    console.timeout(100)
     for i in range(5, 0, -1):
+        if key == 3:
+            exit_game()
         update_console(row + 2, position, str(i), console)
         time.sleep(1)
-
-    console.nodelay(False)
+        key = console.getch()
 
 
 def exit_game():
