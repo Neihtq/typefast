@@ -8,13 +8,6 @@ from utils.cli_utils import update_console, update_console_and_position
 
 COLORS = None
 
-
-def init_curses():
-    curses.curs_set(0)
-    curses.cbreak()
-    curses.noecho()
-
-
 def multi_line_text(text, target_row, width, console):
     left, split_text, word_indices = 0, [], []
     for line in range(target_row+1):
@@ -34,11 +27,10 @@ def multi_line_text(text, target_row, width, console):
 
 
 def run(text, console, colors, author):
-    console.clear()
-
     global COLORS
+
+    console.clear()
     COLORS, width = colors, curses.COLS
-    init_curses()
     console.keypad(1)
 
     target_row, target_col = divmod(len(text), width)
@@ -125,9 +117,8 @@ def game_loop(split_text, word_indices, target_row, target_col, console):
     user_input, width = [], curses.COLS
     start = None
     while row != target_row or position != target_col:
-        curses.flushinp()
         row, position = shift_row(row, position, width)
-        key = console.getch()
+        key = console.getch(row, position)
         if not start:
             start = time.time()
 
