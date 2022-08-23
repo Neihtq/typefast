@@ -2,6 +2,7 @@ import time
 import curses
 
 from metrics.metrics import get_wpm
+from cli.menu import exit_game
 from utils.constants import FINISHED, RESULT
 from utils.cli_utils import update_console, update_console_and_position
 
@@ -24,7 +25,7 @@ def multi_line_text(text, target_row, width, console):
             if text[i] == ' ':
                 word_indices.append(i % width)
             split += text[i]
-        update_console(line, 0, split, COLORS.magenta, console)
+        update_console(line, 0, split, console, COLORS.magenta)
         split_text.append(split)
         left += width
     console.refresh()
@@ -44,26 +45,26 @@ def run(text, console, colors, author):
     split_text, word_indices = multi_line_text(text, target_row, width, console)
 
     author_position = len(split_text[-1]) + 2
-    update_console(target_row, author_position, f'-{author}', COLORS.white, console)
+    author_row = target_row + 2
+    update_console(author_row, 0, f'-{author}', console, COLORS.white)
 
     user_input, start = game_loop(split_text, word_indices, target_row, target_col, console)
     end = time.time()
 
     if start:
         duration = end - start
-        target_row = display_result(target_row, duration, user_input, text, console)
+        author_row = display_result(author_row, duration, user_input, text, console)
     
-    return target_row + 1
+    return author_row + 1
 
 
 
 def display_result(target_row, duration, user_input, text, console):
-    update_console(target_row + 2, 0, FINISHED, COLORS.green, console)
+    update_console(target_row + 2, 0, FINISHED, console, COLORS.green)
     time.sleep(1)
     wpm = get_wpm(duration, user_input, text)
-    update_console(target_row + 3, 0, RESULT, COLORS.green, console)
-    update_console(target_row + 4, 0, f'{wpm} wpm', COLORS.green, console)
-    time.sleep(2)
+    update_console(target_row + 3, 0, RESULT, console, COLORS.green)
+    update_console(target_row + 4, 0, f'{wpm} wpm', console, COLORS.green)
 
     return target_row + 4
 
@@ -75,7 +76,7 @@ def handle_char(key, row, position, text, user_input, console, skip_space):
         color = COLORS.red if skip_space else COLORS.white
         position = update_console_and_position(row, position, text, key, color, user_input, console)
     elif character == " ":        
-        update_console(row, position, '_', COLORS.red, console)        
+        update_console(row, position, '_', console, COLORS.red)
     else:
         position = update_console_and_position(row, position, character, key, COLORS.red, user_input, console)
 
@@ -104,7 +105,7 @@ def handle_backspace(row, position, width, split_text, user_input, console):
     if user_input:
         user_input.pop()
 
-    update_console(row, position, split_text[row][position], COLORS.magenta, console)
+    update_console(row, position, split_text[row][position], console, COLORS.magenta)
 
     return row, position
 
@@ -127,6 +128,9 @@ def game_loop(split_text, word_indices, target_row, target_col, console):
         key = console.getch(row, position)
         if not start:
             start = time.time()
+
+        if key == 3: # KeyboardInterrupt (ctrl + C)
+            exit_game()
         if key == 27: # esc
             return None, None
         elif key == 8 or key == 127 or key == curses.KEY_BACKSPACE: # backspace
