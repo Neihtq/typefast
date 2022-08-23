@@ -2,6 +2,7 @@ import sys
 import time
 import curses
 
+from text_acquisition.preloading import update_preload
 from utils.cli_utils import update_console
 from utils.constants import WELCOME, PROMPT, RETRY, GOODBYE, INVALID, FETCHING, RESTART
 
@@ -30,7 +31,7 @@ def menu(row, color, console, greeting):
             update_console(row + offset, 0, INVALID, console, color)
 
 
-def countdown(row, console, duration):
+def countdown(row, console, duration, cache):
     position = len(RESTART) + 1
     update_console(row + 2, 0, RESTART, console)
 
@@ -46,10 +47,11 @@ def countdown(row, console, duration):
 
         key = console.getch()
         if key == 3:
-            exit_game()
+            exit_game(cache)
 
     console.nodelay(False)
 
-def exit_game():
+def exit_game(cache):
+    update_preload(cache)
     curses.endwin()
     sys.exit()

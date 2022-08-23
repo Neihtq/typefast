@@ -1,3 +1,5 @@
+import os
+
 # Text acquisition
 URL = 'https://www.brainyquote.com'
 TOPICS = URL + '/topics'
@@ -18,7 +20,11 @@ RESTART = 'Restart in'
 FINISHED = 'Done. Calculating your words per minuts (wpm) now...'
 RESULT = 'Your Score:'
 
-PRELOAD_BUFFER = 8
-
 # paths
-PRELOAD_TEXT = 'preload.csv'
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.join('..')
+
+if not os.path.exists('cache'):
+    os.makedirs('cache')
+
+CACHE_PATH = os.path.join('cache', 'cache.csv')

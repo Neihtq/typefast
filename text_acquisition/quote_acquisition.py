@@ -48,14 +48,14 @@ def acquire_quotes(href):
 def chose_quote(href, seen):
     divs = acquire_quotes(href)
 
-    quote_div = None
-    while quote_div in seen:
+    content = None
+    while content in seen:
         idx = get_random_idx(len(divs)-1)
-        quote_div = divs[idx].text
+        quote = divs[idx].text
+        quote, author = cleanup_quote(quote)
+        content = quote + author
 
-    seen.add(quote_div)
-
-    return quote_div
+    return quote, author, content
 
 
 def cleanup_quote(quote):
@@ -66,7 +66,4 @@ def cleanup_quote(quote):
 
 def get_quote(seen):
     topic = chose_topic()
-    quote = chose_quote(topic, seen)
-    clean_quote, author = cleanup_quote(quote)
-
-    return clean_quote, author
+    return chose_quote(topic, seen)

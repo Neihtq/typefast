@@ -3,11 +3,10 @@ import time
 import curses
 
 from tqdm import tqdm
-from text_acquisition.quote_acquisition import chose_topic, chose_quote, cleanup_quote, get_quotes, crawl_all_quotes
-from utils.utils import measure_time
 from utils.cli_utils import update_console
-from utils.html_parser import get_parsed_html, get_random_idx
+from utils.html_parser import get_parsed_html
 from utils.constants import TOPICS, TOPIC_CLASS, URL, QUOTE_CLASS, PAGE_LINK_CLASS
+from text_acquisition.preloading import update_preload, preload
 
 
 def get_topics_less_2_pages():
@@ -62,54 +61,16 @@ def catch_keypress():
             sys.exit()
 
 
-def quote_acquisition_time():
-    duration, topic = measure_time(chose_topic)
-    print(f'Chose topic: {duration}s')
-
-    duration, quote = measure_time(chose_quote_timed, (topic, {None}))
-    print(f'Chose quote: {duration}s')
-
-    duration, (clean_quote, author) = measure_time(cleanup_quote, (quote,))
-    print(f'Cleanup quote: {duration}s')
+def test_update_cache():
+    cache = [['habibi', 'sein sohn']]
+    update_preload(cache)
 
 
-def chose_quote_timed(href, seen):
-    start = time.time()
-    topic_url = URL + href
-    quotes_html = get_parsed_html(topic_url)
-    end = time.time()
-    print(f'HTML parse: {end-start}s')
-
-    start = time.time()
-    divs = quotes_html.find_all('div', {'class': QUOTE_CLASS})
-    end = time.time()
-    print(f'Find div: {end-start}s')
-
-    start = time.time()
-    page_links = quotes_html.find_all('a', {'class': PAGE_LINK_CLASS}, href=True)
-    end = time.time()
-    print(f'Find a: {end-start}s')
-    
-    start = time.time()
-    if page_links:
-        max_page_number = int(page_links[-2].text)
-        for num in range(2, max_page_number + 1):
-            url = topic_url + f'_{num}'
-            get_quotes(url, divs)
-    end = time.time()
-    print(f'navigate pages: {end-start}s')
-
-    start = time.time()
-    quote_div = None
-    while quote_div in seen:
-        idx = get_random_idx(len(divs)-1)
-        quote_div = divs[idx]
-
-    seen.add(quote_div)
-    end = time.time()
-    print(f'update set: {end-start}s')
-
-    return quote_div.text
+def test_preload():
+    cache = preload()
+    print(type(cache[0]))
+    print(len(cache))
+    print(cache)
 
 
 if __name__ == '__main__':
@@ -117,4 +78,5 @@ if __name__ == '__main__':
     #throw_exception()
     #catch_keypress()
     #quote_acquisition_time() 
-    crawl_all_quotes()
+    test_update_cache()
+    test_preload()
