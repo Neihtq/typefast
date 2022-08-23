@@ -1,4 +1,5 @@
 import sys
+import time
 import curses
 
 from tqdm import tqdm
@@ -29,6 +30,24 @@ def get_topics_less_2_pages():
         print(e)
 
 
+def throw_exception():
+    console = curses.initscr()
+    console.clear()
+    console.addstr(0, 0, 'test')
+    console.refresh()
+
+    time.sleep(1)
+
+    try:
+        x = 1 / 0
+    except Exception as e:
+        curses.endwin() 
+        time.sleep(1)
+        print('Ended window')
+        time.sleep(1)
+        raise e
+
+
 def catch_keypress():
     console = curses.initscr() 
     update_console(0, 0, "Press any key", console)
@@ -41,8 +60,7 @@ def catch_keypress():
             sys.exit()
 
 
-
-
 if __name__ == '__main__':
     #get_topics_less_2_pages()
+    #throw_exception()
     catch_keypress()

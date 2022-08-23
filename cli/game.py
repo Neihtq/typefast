@@ -97,7 +97,7 @@ def shift_row(row, position, width):
 def handle_backspace(row, position, width, split_text, user_input, console):
     if position > 0:
         if split_text[row][position - 1] == ' ':
-            return 
+            return row, position 
         position -= 1
     else:
         row, position = shift_row(row, position, width)

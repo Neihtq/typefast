@@ -3,9 +3,9 @@ import curses
 
 console = curses.initscr()
 
-from utils.colors import colors
 from cli.game import run
-from cli.menu import countdown 
+from cli.menu import countdown
+from utils.colors import colors
 from text_acquisition.quote_acquisition import get_quote
 
 
@@ -16,7 +16,11 @@ if __name__ == '__main__':
     author = 'someone'
     greeting = True
     row = 0
-    while True:
-        quote, author = get_quote(seen)
-        row = run(quote, console, colors, author)
-        countdown(row, console)
+    try:
+        while True:
+            quote, author = get_quote(seen)
+            row = run(quote, console, colors, author)
+            countdown(row, console)
+    except Exception as e:
+        curses.endwin()
+        raise e
