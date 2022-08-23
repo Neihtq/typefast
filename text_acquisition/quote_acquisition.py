@@ -6,17 +6,21 @@ from utils.html_parser import get_parsed_html, get_random_idx, find_classes
 
 def chose_topic():
     links = find_classes(TOPICS, 'a', TOPIC_CLASS, href=True)
+
+    assert len(links) > 0
+
     idx = get_random_idx(len(links)-1)
     href = links[idx]['href']
     
     return href
 
 
-def get_quotes(url, all_divs):
+def get_quotes(url):
     quotes_html = get_parsed_html(url)
     divs = quotes_html.find_all('div', {'class': QUOTE_CLASS})
     divs = find_classes(url, 'div', QUOTE_CLASS)
-    all_divs += divs
+
+    return divs 
 
 
 def get_quote_links(topic_url): 
@@ -27,19 +31,16 @@ def get_quote_links(topic_url):
     return divs, page_links
 
 
-def navigate_all_pages(page_links, divs, topic_url):
-    max_page_number = int(page_links[-2].text)
-    for num in range(2, max_page_number + 1):
-        url = topic_url + f'_{num}'
-        get_quotes(url, divs)
-
-
 def acquire_quotes(href):
     topic_url = URL + href
     divs, page_links = get_quote_links(topic_url)
 
     if page_links:
-        navigate_all_pages(page_links, divs, topic_url)
+        max_page_number = int(page_links[-2].text)
+        num = get_random_idx(max_page_number+1, 1)
+        if num > 1:
+            url = topic_url + f'_{num}'
+            divs = get_quotes(url)
 
     return divs
 
@@ -50,11 +51,11 @@ def chose_quote(href, seen):
     quote_div = None
     while quote_div in seen:
         idx = get_random_idx(len(divs)-1)
-        quote_div = divs[idx]
+        quote_div = divs[idx].text
 
     seen.add(quote_div)
 
-    return quote_div.text
+    return quote_div
 
 
 def cleanup_quote(quote):
@@ -69,18 +70,3 @@ def get_quote(seen):
     clean_quote, author = cleanup_quote(quote)
 
     return clean_quote, author
-
-
-def crawl_all_quotes():
-    links = find_classes(TOPICS, 'a', TOPIC_CLASS, href=True)
-    data = []
-    for link in tqdm(links):
-        href = link['href']
-        divs = acquire_quotes(href)
-
-        for div in tqdm(divs):
-            quote, author = cleanup_quote(div.text)
-            data.append([quote, author])
-
-    print('Write csv.')
-    update_preload(data)

@@ -3,7 +3,6 @@ import curses
 from cli.game import run
 from cli.menu import countdown
 from text_acquisition.quote_acquisition import get_quote
-from text_acquisition.text_loader import load_text
 
 
 def main(console):
@@ -13,9 +12,8 @@ def main(console):
 
     curses.cbreak()
     row, seen = 0, {None}
-    data = load_text(seen)
     while True:
-        (quote, author) = data.pop()
+        quote, author = get_quote(seen)
         row, duration = run(quote, console, colors, author)
         countdown(row, console, duration)
 
