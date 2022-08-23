@@ -1,7 +1,9 @@
+import sys
 import time
 import curses
 
 from tqdm import tqdm
+from utils.cli_utils import update_console
 from utils.html_parser import get_parsed_html
 from utils.constants import TOPICS, TOPIC_CLASS, URL, QUOTE_CLASS, PAGE_LINK_CLASS
 
@@ -46,7 +48,19 @@ def throw_exception():
         raise e
 
 
+def catch_keypress():
+    console = curses.initscr() 
+    update_console(0, 0, "Press any key", console)
+
+    while True:
+        key = console.getch()
+        update_console(1, 0, str(key), console)
+        if key == 3:
+            update_console(2, 0, 'KeyboardInterrupt', console)
+            sys.exit()
+
 
 if __name__ == '__main__':
     #get_topics_less_2_pages()
-    throw_exception()
+    #throw_exception()
+    catch_keypress()
