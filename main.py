@@ -2,8 +2,7 @@ import curses
 
 from cli.game import run
 from cli.menu import countdown
-from text_acquisition.quote_acquisition import get_quote
-from text_acquisition.preloading import load_cache, load_text
+from text_acquisition.text_loader import load_cache, load_text
 
 
 def main(console):
@@ -16,7 +15,7 @@ def main(console):
     curses.noecho()
 
     stack = load_cache()
-    cache = stack.deepcopy()
+    cache = stack.copy()
     row, seen = 0, {None}
     while True:
         quote, author, is_new = load_text('quotes', seen, stack)
