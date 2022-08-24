@@ -6,6 +6,7 @@ from tqdm import tqdm
 from utils.cli_utils import update_console
 from utils.html_parser import get_parsed_html
 from utils.constants import TOPICS, TOPIC_CLASS, URL, QUOTE_CLASS, PAGE_LINK_CLASS
+from text_acquisition.preloading import update_preload, preload
 
 
 def get_topics_less_2_pages():
@@ -60,7 +61,22 @@ def catch_keypress():
             sys.exit()
 
 
+def test_update_cache():
+    cache = [['habibi', 'sein sohn']]
+    update_preload(cache)
+
+
+def test_preload():
+    cache = preload()
+    print(type(cache[0]))
+    print(len(cache))
+    print(cache)
+
+
 if __name__ == '__main__':
     #get_topics_less_2_pages()
     #throw_exception()
-    catch_keypress()
+    #catch_keypress()
+    #quote_acquisition_time() 
+    test_update_cache()
+    test_preload()

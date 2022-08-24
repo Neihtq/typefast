@@ -9,12 +9,6 @@ from utils.cli_utils import update_console, update_console_and_position
 COLORS = None
 
 
-def init_curses():
-    curses.curs_set(0)
-    curses.cbreak()
-    curses.noecho()
-
-
 def multi_line_text(text, target_row, width, console):
     left, split_text, word_indices = 0, [], []
     for line in range(target_row+1):
@@ -33,12 +27,11 @@ def multi_line_text(text, target_row, width, console):
     return split_text, word_indices, 
 
 
-def run(text, console, colors, author):
+def run(text, console, colors, author, cache):
     console.clear()
 
     global COLORS
     COLORS, width = colors, curses.COLS
-    init_curses()
     console.keypad(1)
 
     target_row, target_col = divmod(len(text), width)
@@ -47,7 +40,7 @@ def run(text, console, colors, author):
     author_row = target_row + 2
     update_console(author_row, 0, f'-{author}', console, COLORS.white)
 
-    user_input, start = game_loop(split_text, word_indices, target_row, target_col, console)
+    user_input, start = game_loop(split_text, word_indices, target_row, target_col, console, cache)
     end = time.time()
 
     wait_time = 2
@@ -120,19 +113,18 @@ def handle_space(row, position, word_idx, word_indices):
     return row, position, word_idx
 
 
-def game_loop(split_text, word_indices, target_row, target_col, console):
+def game_loop(split_text, word_indices, target_row, target_col, console, cache):
     row = prev_position = position = word_idx = 0
     user_input, width = [], curses.COLS
     start = None
     while row != target_row or position != target_col:
-        curses.flushinp()
         row, position = shift_row(row, position, width)
         key = console.getch()
         if not start:
             start = time.time()
 
         if key == 3: # KeyboardInterrupt (ctrl + C)
-            exit_game()
+            exit_game(cache)
         if key == 27: # esc
             return None, None
         elif key == 8 or key == 127 or key == curses.KEY_BACKSPACE: # backspace

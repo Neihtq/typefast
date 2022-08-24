@@ -9,7 +9,7 @@ def get_wpm(time, user_input, text):
 
 
 def to_next_word(text, ptr):
-    while text[ptr] != ' ' and ptr < len(text):
+    while ptr < len(text) and text[ptr] != ' ':
         ptr += 1
 
     return ptr
@@ -22,7 +22,8 @@ def count_words(user_input, text):
         if user_input[i] != text[j]:
             i = to_next_word(user_input, i)
             j = to_next_word(text, j)
-
+        if not (i < len(user_input) and j < len(text)):
+            break
         if user_input[i] == ' ' and text[j] == ' ':
             correct += 1
         i += 1

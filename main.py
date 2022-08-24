@@ -2,7 +2,7 @@ import curses
 
 from cli.game import run
 from cli.menu import countdown
-from text_acquisition.quote_acquisition import get_quote
+from text_acquisition.text_loader import load_cache, load_text
 
 
 def main(console):
@@ -10,12 +10,20 @@ def main(console):
     quote = "To be honest, it was slavery. Nobody should have any romantic ideas about working underground. It's very, very dangerous. You always knew you were living in danger. You were on your hands and knees half the day."
     author = 'someone'
 
+    curses.curs_set(0)
     curses.cbreak()
+    curses.noecho()
+
+    stack = load_cache()
+    cache = stack.copy()
     row, seen = 0, {None}
     while True:
-        quote, author = get_quote(seen)
-        row, duration = run(quote, console, colors, author)
-        countdown(row, console, duration)
+        quote, author, is_new = load_text('quotes', seen, stack)
+        if is_new:
+            cache.append([quote, author])
+
+        row, duration = run(quote, console, colors, author, cache)
+        countdown(row, console, duration, cache)
 
 
 if __name__ == '__main__':
