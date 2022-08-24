@@ -1,8 +1,11 @@
 import curses
+from turtle import update
 
 from cli.game import run
 from cli.menu import countdown
+from utils.cli_utils import update_console
 from text_acquisition.text_loader import load_cache, load_text
+from utils.constants import RESTARTING
 
 
 def main(console):
@@ -23,7 +26,10 @@ def main(console):
             cache.append([quote, author])
 
         row, duration = run(quote, console, colors, author, cache)
-        countdown(row, console, duration, cache)
+        if duration:
+            countdown(row, console, duration, cache)
+        else:
+            update_console(row + 2, 0, RESTARTING, console)
 
 
 if __name__ == '__main__':

@@ -51,6 +51,7 @@ def countdown(row, console, duration, cache):
 
     console.nodelay(False)
 
+
 def exit_game(cache):
     update_preload(cache)
     curses.endwin()

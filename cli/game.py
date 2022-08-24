@@ -43,7 +43,7 @@ def run(text, console, colors, author, cache):
     user_input, start = game_loop(split_text, word_indices, target_row, target_col, console, cache)
     end = time.time()
 
-    wait_time = 2
+    wait_time = None
     if start:
         duration = end - start
         author_row = display_result(author_row, duration, user_input, text, console)

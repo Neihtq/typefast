@@ -15,6 +15,7 @@ RETRY = 'Do you wann try again?'
 INVALID = 'Invalid answer. Please press "y" for "yes" or "n" for no.'
 FETCHING = 'Fetching text...'
 RESTART = 'Restart in'
+RESTARTING = 'Restarting...'
 
 # Notification
 FINISHED = 'Done. Calculating your words per minuts (wpm) now...'
