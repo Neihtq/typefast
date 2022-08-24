@@ -2,7 +2,6 @@ import sys
 import time
 import curses
 
-from tqdm import tqdm
 from utils.cli_utils import update_console
 from utils.html_parser import get_parsed_html
 from utils.constants import TOPICS, TOPIC_CLASS, URL, QUOTE_CLASS, PAGE_LINK_CLASS
@@ -15,7 +14,7 @@ def get_topics_less_2_pages():
     hrefs = [link['href'] for link in links]
 
     exceptions = []
-    for href in tqdm(hrefs):
+    for href in hrefs:
         topic_url = URL + href
         quotes_html = get_parsed_html(topic_url)
         divs = quotes_html.find_all('div', {'class': QUOTE_CLASS})

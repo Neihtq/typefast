@@ -1,5 +1,3 @@
-from tqdm import tqdm
-from text_acquisition.preloading import update_preload
 from utils.constants import URL, TOPICS, TOPIC_CLASS, QUOTE_CLASS, PAGE_LINK_CLASS
 from utils.html_parser import get_parsed_html, get_random_idx, find_classes
 
