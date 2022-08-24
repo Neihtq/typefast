@@ -51,7 +51,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![](demo/demo.mp4)
+![demo](demo/demo.gif)
 
 Measuring typing speed is a fun and diverting activity that can be done in a short amount of time. When taking a break, too short for playing games or watching series, but too long to only drink a cup of water, speed typing is ideal. However, mostly typing speed can be measured on websites such as [https://10fastfingers.com/typing-test/](10fastfingers) or [https://monkeytype.com](monkeytype). While they do the job, they require a browser, javascript, or even cookies. 
 
