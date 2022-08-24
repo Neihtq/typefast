@@ -76,7 +76,7 @@ def test_preload():
 if __name__ == '__main__':
     #get_topics_less_2_pages()
     #throw_exception()
-    #catch_keypress()
+    catch_keypress()
     #quote_acquisition_time() 
-    test_update_cache()
-    test_preload()
+    #test_update_cache()
+    #test_preload()
