@@ -125,7 +125,9 @@ def game_loop(split_text, word_indices, target_row, target_col, console, cache):
 
         if key == 3: # KeyboardInterrupt (ctrl + C)
             exit_game(cache)
-        if key == 27: # esc
+        elif key == 10:
+            continue
+        elif key == 27: # esc
             return None, None
         elif key == 8 or key == 127 or key == curses.KEY_BACKSPACE: # backspace
             row, position = handle_backspace(row, position, width, split_text, user_input, console)
