@@ -53,9 +53,9 @@
 
 ![demo](demo/demo.gif)
 
-Measuring typing speed is a fun and diverting activity that can be done in a short amount of time. When taking a break, too short for playing games or watching series, but too long to only drink a cup of water, speed typing is ideal. However, mostly typing speed can be measured on websites such as [https://10fastfingers.com/typing-test/](10fastfingers) or [https://monkeytype.com](monkeytype). While they do the job, they require a browser, javascript, or even cookies. 
+Measuring typing speed is a fun and diverting activity that can be done in a short amount of time. When taking a break, too short for playing games or watching series, but too long to only drink a cup of water, speed typing is ideal. However, mostly typing speed can be measured on websites such as [10fastfingers](https://10fastfingers.com/typing-test/) or [monkeytype](https://monkeytype.com). While they do the job, they require a browser, javascript, or even cookies. 
 
-Typefast is a CLI application that does the same like monketype, but in the terminal! It is cross platform and binds in well in the terminal. Starting and doing a few quick speed typing test has never been smoother. It collects random quotes from [https://www.brainyquote.com/](BrainyQuote) for typing tests. Other speed tests like most words within a minute, etc. are WIP. It is very lightweight and uses very little dependencies.
+Typefast is a CLI application that does the same like monkeytype, but in the terminal! It is cross platform and binds in well in the terminal. Starting and doing a few quick speed typing test has never been smoother. It collects random quotes from [BrainyQuote](https://www.brainyquote.com/) for typing tests. Other speed tests like most words within a minute, etc. are WIP. It is very lightweight and uses very little dependencies.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -63,11 +63,11 @@ Typefast is a CLI application that does the same like monketype, but in the term
 
 ### Built With
 
-* [https://www.python.org/](Python3)
-* [https://pypi.org/project/beautifulsoup4/](Beautiful Soup)
-* [https://pypi.org/project/tqdm/](tqdm)
-* [https://pypi.org/project/requests/](Requests)
-* [https://docs.python.org/3/howto/curses.html](curses)
+* [Python3](https://www.python.org/)
+* [Beautiful Soup](https://pypi.org/project/beautifulsoup4/)
+* [tqdm](https://pypi.org/project/tqdm/)
+* [Requests](https://pypi.org/project/requests/)
+* [curses](https://docs.python.org/3/howto/curses.html)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -81,7 +81,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-* Have pip installed (different methodes explained [https://pip.pypa.io/en/stable/installation/](here))
+* Have pip installed (different methodes explained [here](https://pip.pypa.io/en/stable/installation/))
     ```sh
     python -m ensurepip --upgrade
     ```
