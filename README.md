@@ -63,10 +63,10 @@ Typefast is a CLI application that does the same like monkeytype, but in the ter
 
 ### Built With
 
-* [Python3](https://www.python.org/)
+* [Python 3](https://www.python.org/)
 * [Beautiful Soup](https://pypi.org/project/beautifulsoup4/)
 * [tqdm](https://pypi.org/project/tqdm/)
-* [Requests](https://pypi.org/project/requests/)
+* [requests](https://pypi.org/project/requests/)
 * [curses](https://docs.python.org/3/howto/curses.html)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
