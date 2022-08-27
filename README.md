@@ -14,7 +14,7 @@
   <h1 align="center">typefast</h1>
 
   <p align="center">
-    A CLI application for measuring your typing speed.l
+    A CLI application for measuring your typing speed.
     <br />
     <a href="https://github.com/Neihtq/typefast/issues">Report Bug or Request Feature</a>
   </p>
