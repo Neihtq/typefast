@@ -1,7 +1,7 @@
 import time
 import curses
 
-from metrics.metrics import get_wpm
+from metrics.metrics import get_metrics
 from cli.menu import exit_game
 from utils.constants import FINISHED, RESULT
 from utils.cli_utils import update_console, update_console_and_position
@@ -56,9 +56,10 @@ def run(text, console, colors, author, cache):
 def display_result(target_row, duration, user_input, text, console):
     update_console(target_row + 2, 0, FINISHED, console, COLORS.green)
     time.sleep(1)
-    wpm = get_wpm(duration, user_input, text)
+    wpm, acc = get_metrics(duration, user_input, text)
     update_console(target_row + 3, 0, RESULT, console, COLORS.green)
     update_console(target_row + 4, 0, f'{wpm} wpm', console, COLORS.green)
+    update_console(target_row + 5, 0, f'{acc}% acc', console, COLORS.green)
 
     return target_row + 4
 
