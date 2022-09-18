@@ -189,6 +189,3 @@ Project Link: [https://github.com/Neihtq/typefast](https://github.com/Neihtq/typ
 [license-url]: https://github.com/neihtq/typefast/blob/main/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/thien-quang-nguyen/
-[instagram-shield]: https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white
-[instagram-url]: https://www.instagram.com/neiht/
-[product-screenshot]: demo/demo.mp4
