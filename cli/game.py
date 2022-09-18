@@ -3,11 +3,13 @@ import curses
 
 from metrics.metrics import get_metrics
 from cli.menu import exit_game
-from utils.constants import FINISHED, RESULT
+from utils.constants import FINISHED, RESULT, TOP_FIVE
 from utils.cli_utils import update_console, update_console_and_position
+from utils.lru_cache import LRU_CACHE
 
 COLORS = None
-
+CACHE_SIZE = 4
+CACHE = LRU_CACHE(CACHE_SIZE)
 
 def multi_line_text(text, target_row, width, console):
     left, split_text, word_indices = 0, [], []
@@ -47,8 +49,8 @@ def run(text, console, colors, author, cache):
     if start:
         duration = end - start
         author_row = display_result(author_row, duration, user_input, text, console)
+        author_row = display_past_five(author_row, console)
         wait_time = 5
-    
     
     return author_row + 1, wait_time
 
@@ -57,11 +59,27 @@ def display_result(target_row, duration, user_input, text, console):
     update_console(target_row + 2, 0, FINISHED, console, COLORS.green)
     time.sleep(1)
     wpm, acc = get_metrics(duration, user_input, text)
+    CACHE.insert((wpm, acc)) 
     update_console(target_row + 3, 0, RESULT, console, COLORS.green)
-    update_console(target_row + 4, 0, f'{wpm} wpm', console, COLORS.green)
-    update_console(target_row + 5, 0, f'{acc}% acc', console, COLORS.green)
+    text = f'{wpm} wpm'
+    update_console(target_row + 4, 0, text, console, COLORS.green)
+    update_console(target_row + 4, len(text) + 3, f'{acc}% acc', console, COLORS.green)
 
-    return target_row + 4
+    return target_row + 6
+
+
+def display_past_five(target_row, console):
+    update_console(target_row, 0, TOP_FIVE, console, COLORS.green)
+    metrics = CACHE.show_all()
+    offset = 1
+    while metrics:
+        wpm, acc = metrics.pop()
+        text = f'{offset}. {wpm} wpm'
+        update_console(target_row + offset, 0, text, console, COLORS.green)
+        update_console(target_row + offset, len(text) + 3, f'{acc}% acc', console, COLORS.green)
+        offset += 1
+
+    return target_row + offset
 
 
 def handle_char(key, row, position, text, user_input, console, skip_space):
