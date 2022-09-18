@@ -5,7 +5,6 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-[![Instagra][instagram-shield]][instagram-url]
 
 
 
@@ -169,7 +168,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Quang Thien Nguyen - q.thien.nguyen@outlook.de - [LinkedIn](https://www.linkedin.com/in/thien-quang-nguyen/) - [@neiht (Instagram)](https://www.instagram.com/neiht/)
+Quang Thien Nguyen - q.thien.nguyen@outlook.de - [LinkedIn](https://www.linkedin.com/in/thien-quang-nguyen/)
 
 Project Link: [https://github.com/Neihtq/typefast](https://github.com/Neihtq/typefast)
 
