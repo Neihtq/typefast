@@ -20,6 +20,7 @@ RESTARTING = 'Restarting...'
 # Notification
 FINISHED = 'Done. Calculating your words per minuts (wpm) now...'
 RESULT = 'Your Score:'
+TOP_FIVE = 'Stats from your previous rounds:'
 
 # paths
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
